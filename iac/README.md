@@ -10,5 +10,5 @@ Note: default admin shell is changed to /bin/bash (it is needed for gateways' im
 After first deployment step mgmt_import_gw will fail.
 You have to wait approx 20 minutes before running it again.
 
-## Variables description:
-s
+Update:
+management network has become 10.0.0.0/22 (from /16) due to vWAN hub network 10.0.100.0/24

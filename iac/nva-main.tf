@@ -71,34 +71,34 @@ locals {
 }
 
 //********************** Marketplace Terms & Solution Registration **************************//
-data "http" "accept-marketplace-terms-existing-agreement" {
-  method = "GET"
-  url = "https://management.azure.com/subscriptions/${var.subscription_id}/providers/Microsoft.MarketplaceOrdering/agreements/checkpoint/offers/azure-vwan/plans/vwan-app?api-version=2021-01-01"
-  request_headers = {
-    Accept = "application/json"
-    "Authorization" = "Bearer ${local.access_token}"
-  }
-}
+# data "http" "accept-marketplace-terms-existing-agreement" {
+#   method = "GET"
+#   url = "https://management.azure.com/subscriptions/${var.subscription_id}/providers/Microsoft.MarketplaceOrdering/agreements/checkpoint/offers/azure-vwan/plans/vwan-app?api-version=2021-01-01"
+#   request_headers = {
+#     Accept = "application/json"
+#     "Authorization" = "Bearer ${local.access_token}"
+#   }
+# }
 
 resource "azurerm_marketplace_agreement" "accept-marketplace-terms" {
-  count = can(jsondecode(data.http.accept-marketplace-terms-existing-agreement.response_body).id) && jsondecode(data.http.accept-marketplace-terms-existing-agreement.response_body).properties.state == "Active" ? 0 : 1
+  # count = can(jsondecode(data.http.accept-marketplace-terms-existing-agreement.response_body).id) && jsondecode(data.http.accept-marketplace-terms-existing-agreement.response_body).properties.state == "Active" ? 0 : 1
   publisher = "checkpoint"
   offer     = "azure-vwan"
   plan      = "vwan-app"
 }
 
 
-data "http" "azurerm_resource_provider_registration-exist" {
-  method = "GET"
-  url = "https://management.azure.com/subscriptions/${var.subscription_id}/providers/Microsoft.Solutions?api-version=2021-01-01"
-  request_headers = {
-    Accept = "application/json"
-    "Authorization" = "Bearer ${local.access_token}"
-  }
-}
+# data "http" "azurerm_resource_provider_registration-exist" {
+#   method = "GET"
+#   url = "https://management.azure.com/subscriptions/${var.subscription_id}/providers/Microsoft.Solutions?api-version=2021-01-01"
+#   request_headers = {
+#     Accept = "application/json"
+#     "Authorization" = "Bearer ${local.access_token}"
+#   }
+# }
 
 resource "azurerm_resource_provider_registration" "solutions" {
-  count = jsondecode(data.http.azurerm_resource_provider_registration-exist.response_body).registrationState == "Registered" ? 0 : 1
+  # count = jsondecode(data.http.azurerm_resource_provider_registration-exist.response_body).registrationState == "Registered" ? 0 : 1
   name = "Microsoft.Solutions"
 }
 
@@ -187,4 +187,9 @@ data "external" "update-routing-intent" {
 
 output "api_request_result" {
   value = length(local.routing-intent-policies) != 0 ? data.external.update-routing-intent[0].result : {routing-intent: "not changed"}
+}
+
+output "cli" {
+  value = "python3 /opt/CPcme/features/vWAN/vWAN_automatic_script.py tenant=${var.tenant_id} client_id=${var.client_id} client_secret=${var.client_secret} subscription=${var.subscription_id} managed_app_resource_group_name=${var.nva-rg-name} nva_name=${var.nva-name} sic_key=${var.sic_key}"
+  sensitive = true
 }
