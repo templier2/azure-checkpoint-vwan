@@ -37,6 +37,7 @@ data "http" "azure_auth" {
 
 locals {
   access_token = var.authentication_method == "Service Principal" ? jsondecode(data.http.azure_auth[0].response_body).access_token : data.external.az_access_token[0].result.accessToken
+  nva_cli = "python3 /opt/CPcme/features/vWAN/vWAN_automatic_script.py tenant=${var.tenant_id} client_id=${var.client_id} client_secret=${var.client_secret} subscription=${var.subscription_id} managed_app_resource_group_name=${var.nva-rg-name} nva_name=${var.nva-name} sic_key=${var.sic_key}"
 }
 
 data "http" "image-versions" {
@@ -190,6 +191,6 @@ output "api_request_result" {
 }
 
 output "cli" {
-  value = "python3 /opt/CPcme/features/vWAN/vWAN_automatic_script.py tenant=${var.tenant_id} client_id=${var.client_id} client_secret=${var.client_secret} subscription=${var.subscription_id} managed_app_resource_group_name=${var.nva-rg-name} nva_name=${var.nva-name} sic_key=${var.sic_key}"
+  value = local.nva_cli
   sensitive = true
 }

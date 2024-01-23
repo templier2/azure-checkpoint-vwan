@@ -83,16 +83,6 @@ variable "admin-shell" {
   }
 }
 
-variable "sic_key" {
-  type      = string
-  default   = ""
-  sensitive = true
-  validation {
-    condition = can(regex("^[a-z0-9A-Z]{12,30}$", var.sic_key))
-    error_message = "Only alphanumeric characters are allowed, and the value must be 12-30 characters long."
-  }
-}
-
 variable "ssh-public-key" {
   type    = string
   default = ""
