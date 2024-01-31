@@ -1,13 +1,3 @@
-locals {
-  regex_second_frontend_subnet_prefix = regex(local.regex_valid_network_cidr, var.second_frontend_subnet_prefix) == var.second_frontend_subnet_prefix ? 0 : "Variable [second_frontend_subnet_prefix] must be a valid address in CIDR notation."
-  // Will fail if var.second_frontend_subnet_prefix is invalid
-}
-
-variable "second_frontend_subnet_prefix" {
-  description = "Address prefix to be used for network frontend subnet"
-  type        = string
-}
-
 variable "delay" {
   description = "Time required to wait before configuration of Management server"
   type        = string

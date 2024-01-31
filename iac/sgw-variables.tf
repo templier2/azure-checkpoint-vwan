@@ -39,11 +39,19 @@ variable "backend_subnet_prefix" {
   type        = string
 }
 
+variable "second_frontend_subnet_prefix" {
+  description = "Address prefix to be used for network frontend subnet"
+  type        = string
+}
+
 locals {
   regex_frontend_subnet_prefix = regex(local.regex_valid_network_cidr, var.frontend_subnet_prefix) == var.frontend_subnet_prefix ? 0 : "Variable [frontend_subnet_prefix] must be a valid address in CIDR notation."
   // Will fail if var.frontend_subnet_prefix is invalid
   regex_backend_subnet_prefix = regex(local.regex_valid_network_cidr, var.backend_subnet_prefix) == var.backend_subnet_prefix ? 0 : "Variable [backend_subnet_prefix] must be a valid address in CIDR notation."
   // Will fail if var.backend_subnet_prefix is invalid
+  regex_second_frontend_subnet_prefix = regex(local.regex_valid_network_cidr, var.second_frontend_subnet_prefix) == var.second_frontend_subnet_prefix ? 0 : "Variable [second_frontend_subnet_prefix] must be a valid address in CIDR notation."
+  // Will fail if var.second_frontend_subnet_prefix is invalid
+
 }
 
 variable "sic_key" {

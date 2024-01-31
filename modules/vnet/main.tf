@@ -69,7 +69,8 @@ resource "azurerm_route_table" "backend" {
   route {
     name = "To-Internet"
     address_prefix = "0.0.0.0/0"
-    next_hop_type = local.next_hop_type_allowed_values[4]
+    next_hop_type = local.next_hop_type_allowed_values[3]
+    next_hop_in_ip_address = cidrhost(var.subnet_prefixes[1], 4)
   }
 }
 
